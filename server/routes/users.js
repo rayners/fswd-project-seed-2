@@ -3,9 +3,6 @@ import passport from '../passport';
 
 const router = express.Router();
 
-// router.get('/', (request, response) => {
-// });
-
 router.get('/isLoggedIn', (request, response) => {
     if (request.user) {
         response.json(request.user);
@@ -32,24 +29,15 @@ router.post('/register', (req, res) => {
           .then(function(existingUser) {
             if (existingUser) {
               res.format({
-                html: function() {
-                  res.end('User already exists')
-                },
-                json: function() {
-                  res.status(400).json({ error: 'User already exists '});
-                }
-              })
+                html: () => res.end('User already exists'),
+                json: () => res.status(400).json({ error: 'User already exists '})
+              });
             } else {
               User.create(req.body).then(function(user) {
-                req.session.user_id = user.id;
-                req.session.save(function() {
+                req.login(user, () => {
                   res.format({
-                    html: function() {
-                      res.redirect('/');
-                    },
-                    json: function() {
-                      req.login(user, () => res.json(user))
-                    }
+                    html: () => res.redirect('/'),
+                    json: () => res.json(user)
                   });
                 });
               });
@@ -74,6 +62,22 @@ router.post('/login', (request, response, next) => {
 router.post('/logout', (request, response) => {
   request.logout();
   response.json(true);
-})
+});
+
+router.get('/', (request, response) => {
+  request.app.locals.models.User.findAll()
+    .then(users => response.json(users));
+});
+
+router.get('/:username', (request, response) => {
+  request.app.locals.models.User.findOne({ where: { username: request.params.username }})
+    .then(user => {
+      if (!user) {
+        response.sendStatus(404);
+      } else {
+        response.json(user);
+      }
+    });
+});
 
 export default router;

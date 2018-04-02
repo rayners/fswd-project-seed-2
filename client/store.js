@@ -6,8 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     isLoggedIn: false,
-    user: {
-    }
+    user: {},
+    users: []
   },
   mutations: {
     setLoggedIn(state, isLoggedIn) {
@@ -15,6 +15,9 @@ export default new Vuex.Store({
     },
     setUser(state, user) {
       state.user = user;
+    },
+    setUsers(state, users) {
+      state.users = users;
     }
   },
   actions: {
@@ -51,6 +54,19 @@ export default new Vuex.Store({
           commit('setLoggedIn', false);
           commit('setUser', {});
         });
+    },
+
+    getUsers({ commit }) {
+      return Vue.axios.get('/users')
+        .then(response => {
+          commit('setUsers', response.data);
+        });
+    },
+  },
+
+  getters: {
+    getUserByUsername(state) {
+      return username => state.users.find(user => user.username === username);
     }
   }
 });

@@ -9,6 +9,9 @@ Vue.use(VueAxios, axios);
 import App from './App.vue';
 import router from './router';
 import store from './store';
+import VueLuxon from 'vue-luxon';
+
+Vue.use(VueLuxon);
 
 new Vue({
     router,
