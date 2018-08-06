@@ -1,7 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+import createLogger from 'vuex/dist/logger';
+
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -68,5 +70,7 @@ export default new Vuex.Store({
     getUserByUsername(state) {
       return username => state.users.find(user => user.username === username);
     }
-  }
+  },
+
+  plugins: [createLogger()]
 });

@@ -1,3 +1,4 @@
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 var path = require('path'),
     webpack = require('webpack');
 
@@ -45,7 +46,8 @@ module.exports = {
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
         Popper: ['popper.js', 'default'],
-      })
+      }),
+      new VueLoaderPlugin()
   ],
   devtool: 'inline-source-map'
 };
